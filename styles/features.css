@@ -1,0 +1,139 @@
+.App {
+  font-family: Arial, sans-serif;
+}
+
+.feature-section.full-screen {
+  padding-top: 2rem;
+  padding-left: 8rem;
+  padding-right: 0;
+}
+
+.feature-section {
+  padding: 0rem 8rem;
+}
+
+.feature-section.full-screen {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.feature {
+  display: flex;
+  align-items: center;
+}
+
+.feature.reverse-layout {
+  height: 445px;
+}
+
+
+.feature-text {
+  flex: 1;
+  padding: 20px;
+  text-align: justify;
+}
+
+.feature-text h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding-bottom: 6px;
+}
+
+.management-image {
+  flex: 1;
+  padding: 20px;
+}
+
+.management-image img {
+  width: 100%;
+  height: auto;
+}
+
+.feature-image {
+  flex: 1;
+  padding: 20px;
+}
+
+.feature-image img {
+  width: 100%;
+  height: auto;
+}
+
+.start-free-button,
+.try-now-button {
+  font-size: 1rem;
+  padding: 12px 20px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.start-free-button:hover,
+.try-now-button:hover {
+  background-color: #0056b3;
+}
+
+.newsletter {
+  /* width: 300px; */
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(to bottom, #87CEFA, rgba(161, 186, 202, 0.2));
+  border-radius: 5px;
+  color: black;
+  margin-top: 5rem;
+}
+
+.section-last-section {
+  text-align: center;
+  background-color: #f8f9fa;
+}
+
+.newsletter .news-text {
+  padding-top: 1.7rem;
+  font-size: 2rem;
+}
+
+.newsletter .trial {
+  font-size: 18px;
+  color: rgb(78, 78, 78);
+  letter-spacing: 0.1rem;
+  padding-top: 18px;
+}
+
+.newsletter .news-text,
+.newsletter .trial {
+  margin: 0;
+}
+
+.try-now-button{
+  margin-bottom: 1.7rem;
+}
+
+
+@media (max-width: 855px) {
+  .feature-section.full-screen{
+    padding-top: 22rem;
+    padding-right: 8rem;
+  }
+
+  .feature {
+    flex-direction: column;
+  }
+
+  .feature.reverse-layout {
+    padding-top: 15rem;
+    flex-direction: column-reverse;
+    height: auto;
+  }
+
+  .feature.reverse-layout.last {
+    padding-top: 5rem;
+  }
+
+}

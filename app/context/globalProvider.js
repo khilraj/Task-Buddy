@@ -36,14 +36,6 @@ export const GlobalProvider = ({ children }) => {
     setModal(false);
   };
 
-  // const openNewModal = () => {
-  //   setNewModel(true);
-  // };
-
-  // const closeNewModal = () => {
-  //   setNewModel(false);
-  // };
-
   const collapseMenu = () => {
     setCollapsed(!collapsed);
   };

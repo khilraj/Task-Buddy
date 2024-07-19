@@ -1,12 +1,19 @@
-export { };
 
-// Create a type for the roles
-export type Roles = "admin" | "moderator";
+export interface User {
+  id: string;
+  profile_image_url?: string;
+  username: string;
+  email_addresses: { email_address: string }[];
+}
 
-declare global {
-  interface CustomJwtSessionClaims {
-    metadata: {
-      role?: Roles
-    };
-  }
+export interface Task {
+  id: string;
+  title: string;
+  description: string | null;
+  date: string;
+  isCompleted: boolean;
+  isImportant: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
 }

@@ -7,6 +7,7 @@ import Sidebar from "./Components/Sidebar/Sidebar";
 import GlobalStyleProvider from "./providers/GlobalStyleProvider";
 import ContextProvider from "./providers/ContextProvider";
 import NextTopLoader from "nextjs-toploader";
+import RoleBasedRedirect from "../components/RoleBasedRedirect";
 
 const nunito = Nunito({
   weight: ["400", "500", "600", "700", "800"],
@@ -24,6 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const { userId } = auth();
+
+
 
   return (
     <ClerkProvider>
@@ -45,7 +48,8 @@ export default function RootLayout({
           />
           <ContextProvider>
             <GlobalStyleProvider>
-              {userId && <Sidebar />}
+              {/* {userId && <ConditionalSidebar />} */}
+              <RoleBasedRedirect/>
               <div className="w-full">{children}</div>
             </GlobalStyleProvider>
           </ContextProvider>

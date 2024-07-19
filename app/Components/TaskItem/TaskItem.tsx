@@ -1,10 +1,11 @@
 "use client";
 import { useGlobalState } from "@/app/context/globalProvider";
 import { edit, trash } from "@/app/utils/Icons";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import formatDate from "@/app/utils/formatDate";
 import { FaExpand } from "react-icons/fa";
+import ConfirmationModal from "./ConfirmationModal";
 
 interface Props {
   title: string;
@@ -16,7 +17,7 @@ interface Props {
 
 function TaskItem({ title, description, date, isCompleted, id }: Props) {
   const { theme, deleteTask, updateTask, openModal, setEditTask, openNewModel, setViewTask } = useGlobalState();
-
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const Description = description.length > 90
     ? description.substring(0, 90) + "..."
@@ -32,59 +33,86 @@ function TaskItem({ title, description, date, isCompleted, id }: Props) {
     openModal('edit');
   };
 
+
+  const handleDelete = () => {
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    deleteTask(id);
+    setShowDeleteModal(false);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
   return (
-    <TaskItemStyled theme={theme}>
-     <div className="header">
-        <h1>{title}</h1>
-        <FaExpand className="view-icon" onClick={handleView} />
-      </div>
-      <p>{Description}</p>
-      <p className="date">{formatDate(date)}</p>
-      <div className="task-footer">
-        {isCompleted ? (
+    <>
+      {showDeleteModal && (
+        <ConfirmationModal
+          message="Do you really want to delete this task?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
+      
+      <TaskItemStyled theme={theme}>
+        <div className="header">
+          <h1>{title}</h1>
+          <FaExpand className="view-icon" onClick={handleView} />
+        </div>
+        <p>{Description}</p>
+        <p className="date">{formatDate(date)}</p>
+        <div className="task-footer">
+          {isCompleted ? (
+            <button
+              className="completed"
+              onClick={() => {
+                const task = {
+                  id,
+                  isCompleted: !isCompleted,
+                };
+                updateTask(task);
+              }}
+            >
+              Completed
+            </button>
+          ) : (
+            <button
+              className="incomplete"
+              onClick={() => {
+                const task = {
+                  id,
+                  isCompleted: !isCompleted,
+                };
+                updateTask(task);
+              }}
+            >
+              Incomplete
+            </button>
+          )}
           <button
-            className="completed"
-            onClick={() => {
-              const task = {
-                id,
-                isCompleted: !isCompleted,
-              };
-              updateTask(task);
-            }}
+            type="button"
+            className="edit"
+            onClick={handleEdit}
           >
-            Completed
+            {edit}
           </button>
-        ) : (
           <button
-            className="incomplete"
-            onClick={() => {
-              const task = {
-                id,
-                isCompleted: !isCompleted,
-              };
-              updateTask(task);
-            }}
+            className="delete"
+            onClick={handleDelete}
+            // onClick={() => {
+            //   deleteTask(id);
+              
+            // }}
           >
-            Incomplete
+            {trash}
           </button>
-        )}
-        <button 
-        type="button"
-        className="edit" 
-        onClick={handleEdit}
-        >
-          {edit}
-        </button>
-        <button
-          className="delete"
-          onClick={() => {
-            deleteTask(id);
-          }}
-        >
-          {trash}
-        </button>
-      </div>
-    </TaskItemStyled>
+        </div>
+      </TaskItemStyled>
+    </>
+
   );
 }
 

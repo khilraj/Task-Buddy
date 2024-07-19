@@ -7,6 +7,9 @@ import TaskItem from "../TaskItem/TaskItem";
 import { add, plus } from "@/app/utils/Icons";
 import Modal from "../Modals/Modal";
 import ViewTaskContent from "../Modals/ViewTaskContent";
+import { useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 interface Props {
   title: string;
@@ -14,12 +17,18 @@ interface Props {
 }
 
 function Tasks({ title, tasks }: Props) {
-  const { theme, modal, modalType, openModal, closeModal, setViewTask } = useGlobalState();
+  const { theme, modal, modalType, openModal } = useGlobalState();
+  const { user } = useUser();
+  const router = useRouter();
 
-  // const handleTaskClick = (task: any) => {
-  //   setViewTask(task);
-  //   openModal("view");
-  // };
+  useEffect(() => {
+    if (user) {
+      const role = user.publicMetadata?.role;
+      if (role === "admin") {
+        router.push("/admin-dashboard");
+      }
+    }
+  }, [user, router]);
 
   const handleCreateTaskClick = (e: { stopPropagation: () => void; }) => {
     e.stopPropagation();
