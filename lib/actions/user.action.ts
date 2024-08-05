@@ -12,3 +12,4 @@ export async function createUser(user: any) {
     console.log(error);
   }
 }
+
