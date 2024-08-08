@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Button from "../Button/Button";
 import { add, edit, plus } from "@/app/utils/Icons";
 import {FaTimes} from "react-icons/fa";
+import DOMPurify from 'dompurify';
 
 function CreateContent() {
   const [title, setTitle] = useState("");
@@ -14,6 +15,13 @@ function CreateContent() {
   const [date, setDate] = useState("");
   const [completed, setCompleted] = useState(false);
   const [important, setImportant] = useState(false);
+  const [input, setInput] = useState('');
+
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setInput(e.target.value);
+  // };
+
+  const sanitize = (input: string) => DOMPurify.sanitize(input);
 
   const { theme, allTasks, closeModal, editTask, setEditTask } = useGlobalState();
 
@@ -89,23 +97,6 @@ function CreateContent() {
     }
   };
 
-  //   try {
-  //     const res = await axios.post("/api/tasks", task);
-
-  //     if (res.data.error) {
-  //       toast.error(res.data.error);
-  //     }
-
-  //     if (!res.data.error) {
-  //       toast.success("Task created successfully.");
-  //       allTasks();
-  //       closeModal();
-  //     }
-  //   } catch (error) {
-  //     toast.error("Something went wrong.");
-  //     console.log(error);
-  //   }
-  // };
 
   return (
     <CreateContentStyled onSubmit={handleSubmit} theme={theme}>

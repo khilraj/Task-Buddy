@@ -4,6 +4,7 @@ import React from "react";
 import { useUser } from "@clerk/nextjs";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function SignInPage() {
   const {user} = useUser();
@@ -23,7 +24,13 @@ function SignInPage() {
   return (
     <div className="flex items-center justify-center h-full">
       <SignIn />
+      <div className="mt-4">
+        <Link href="/forgot-password">
+          <a className="text-blue-500 hover:underline">Forgot Password?</a>
+        </Link>
+      </div>
     </div>
+    
   );
 }
 

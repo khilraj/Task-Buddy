@@ -48,7 +48,7 @@ export default function AdminDashboardUI({ users: initialUsers, currentUser }: A
   };
 
   const fetchTasksForUser = async (userId: string): Promise<Task[]> => {
-    const response = await fetch(`/api/tasks/admin?userId=${userId}`);
+    const response = await fetch(`/api/tasks/users?userId=${userId}`);
     if (!response.ok) {
       throw new Error("Failed to fetch tasks");
     }

@@ -10,6 +10,7 @@ import ViewTaskContent from "../Modals/ViewTaskContent";
 import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import DOMPurify from 'dompurify';
 
 interface Props {
   title: string;
@@ -35,6 +36,7 @@ function Tasks({ title, tasks }: Props) {
     openModal("create");
   };
 
+  const sanitize = (input: string) => DOMPurify.sanitize(input);
   
   return (
     <TaskStyled theme={theme}>
@@ -50,17 +52,14 @@ function Tasks({ title, tasks }: Props) {
 
       <div className="tasks grid">
         {tasks.map((task) => (
-          // <div key={task.id} onClick={() => handleTaskClick(task)}>
             <TaskItem
               key={task.id}
-              title={task.title}
-              description={task.description}
-              date={task.date}
+              title={sanitize(task.title)}
+              description={sanitize(task.description)}
+              date={sanitize(task.date)}
               isCompleted={task.isCompleted}
               id={task.id}
-          />
-          // </div>
-          
+          />          
         ))}
         <button className="create-task" onClick={handleCreateTaskClick}>
           {add}
