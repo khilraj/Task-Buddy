@@ -1,10 +1,13 @@
+// /api/webhooks/clerk/route.ts
 import { clerkClient } from "@clerk/nextjs";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
-import { createUser, addUserLog } from "@/lib/actions/user.action";
+import { createUser } from "@/lib/actions/user.action";
+import { addUserLog } from "@/lib/actions/userLog.action";
+import logger from "@/lib/logger";
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
@@ -19,7 +22,8 @@ export async function POST(req: Request) {
   const svix_signature = headerPayload.get("svix-signature");
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response("Error occured -- no svix headers", { status: 400 });
+    logger.error("Missing svix headers");
+    return new Response("Error occurred -- no svix headers", { status: 400 });
   }
 
   const payload = await req.json();
@@ -36,8 +40,8 @@ export async function POST(req: Request) {
       "svix-signature": svix_signature,
     }) as WebhookEvent;
   } catch (err) {
-    console.error("Error verifying webhook:", err);
-    return new Response("Error occured", { status: 400 });
+    logger.error("Error verifying webhook:", err);
+    return new Response("Error occurred", { status: 400 });
   }
 
   const { id } = evt.data;
@@ -55,7 +59,7 @@ export async function POST(req: Request) {
       photo: image_url,
     };
 
-    console.log(user);
+    logger.info(`Creating user: ${JSON.stringify(user)}`);
 
     const newUser = await createUser(user);
 
@@ -67,17 +71,16 @@ export async function POST(req: Request) {
       });
     }
 
-    // Log user creation event
-    await addUserLog(id, 'User created');
-
+    await addUserLog(id as string, 'User created', 'A new user was created.');
     return NextResponse.json({ message: "New user created", user: newUser });
   }
 
-  // Log other events
-  await addUserLog(id as string, `Webhook event: ${eventType}`);
+  if (id) {
+    await addUserLog(id as string, `Webhook event: ${eventType}`, 'Other event logged.');
+  }
 
-  console.log(`Webhook with an ID of ${id} and type of ${eventType}`);
-  console.log("Webhook body:", body);
+  logger.info(`Webhook with an ID of ${id} and type of ${eventType}`);
+  logger.info("Webhook body:", body);
 
   return new Response("", { status: 200 });
 }
