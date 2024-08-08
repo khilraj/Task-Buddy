@@ -1,5 +1,16 @@
 import { Schema, model, models } from "mongoose";
 
+const LogSchema = new Schema({
+  action: {
+    type: String,
+    required: true,
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const UserSchema = new Schema({
   clerkId: {
     type: String,
@@ -25,6 +36,7 @@ const UserSchema = new Schema({
   lastName: {
     type: String,
   },
+  logs: [LogSchema],  // Add logs array
 });
 
 const User = models?.User || model("User", UserSchema);
