@@ -1,6 +1,21 @@
 // /lib/models/userLog.model.ts
 import { Schema, model, models } from "mongoose";
 
+const MessageSchema = new Schema({
+  email: {
+    type: String,
+    required: true,
+  },
+  api: {
+    type: String,
+    required: true,
+  },
+  method: {
+    type: String,
+    required: true,
+  },
+});
+
 const UserLogSchema = new Schema({
   clerkId: {
     type: String,
@@ -17,6 +32,7 @@ const UserLogSchema = new Schema({
   details: {
     type: String,
   },
+  messages: [MessageSchema], // Array of messages
 });
 
 const UserLog = models?.UserLog || model("UserLog", UserLogSchema);

@@ -71,12 +71,19 @@ export async function POST(req: Request) {
       });
     }
 
-    await addUserLog(id as string, 'User created', 'A new user was created.');
+    const messages = [
+      { email: user.email, api: 'user.created', method: 'POST' },
+    ];
+
+    await addUserLog(id as string, 'User created', 'A new user was created.', messages);
     return NextResponse.json({ message: "New user created", user: newUser });
   }
 
   if (id) {
-    await addUserLog(id as string, `Webhook event: ${eventType}`, 'Other event logged.');
+    const messages = [
+      { email: 'example@example.com', api: `webhook/${eventType}`, method: 'POST' }, // Adjust as needed
+    ];
+    await addUserLog(id as string, `Webhook event: ${eventType}`, 'Other event logged.', messages);
   }
 
   logger.info(`Webhook with an ID of ${id} and type of ${eventType}`);
