@@ -25,7 +25,7 @@ function SignInPage() {
     <div className="flex items-center justify-center h-full">
       <SignIn />
       <div className="mt-4">
-        <Link href="/forgot-password">
+        <Link href="/forgot">
           <a className="text-blue-500 hover:underline">Forgot Password?</a>
         </Link>
       </div>

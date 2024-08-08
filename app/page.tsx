@@ -1,8 +1,11 @@
 "use client"
 import React, {useEffect} from "react";
 import "../styles/home.css"
+import {auth} from '@clerk/nextjs/server';
+import { NextResponse } from "next/server";
 
 export default function Home() {
+
   useEffect(() => {
     const handleScroll = (entries: any[]) => {
       entries.forEach((entry) => {
