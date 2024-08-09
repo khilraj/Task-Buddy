@@ -84,6 +84,7 @@ export default function Home() {
         </div>
         <img src="assets/top-home-section.png" alt="home_img" className="right-image" />
       </div>
+      
       {/* <div className="home-top-section">
         <img src="assets/home_bg.png" alt="home_image" />
         <div className="overlay-content">
