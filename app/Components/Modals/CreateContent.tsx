@@ -8,7 +8,6 @@ import Button from "../Button/Button";
 import { add, edit, plus } from "@/app/utils/Icons";
 import {FaTimes} from "react-icons/fa";
 import DOMPurify from 'dompurify';
-import { headers } from "next/headers";
 
 
 function CreateContent() {
@@ -99,13 +98,13 @@ function CreateContent() {
     }
   };
 
-  const csrfToken = headers().get("X-CSRF-Token") || "no token";
+  // const csrfToken = headers().get("X-CSRF-Token") || "no token";
 
 
   return (
     <CreateContentStyled onSubmit={handleSubmit} theme={theme}>
       {/* <h1>Create a Task</h1> */}
-      <input type="hidden" name="csrf_token" value={csrfToken} />
+      {/* <input type="hidden" name="csrf_token" value={csrfToken} /> */}
       <div className="header">
         <h1>{editTask ? "Edit Task" : "Create a Task"}</h1>
         <FaTimes className="close-icon" onClick={handleClose} />
