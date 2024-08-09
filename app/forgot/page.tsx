@@ -67,36 +67,36 @@ const ForgotPasswordPage: NextPage = () => {
 
  return (
    <div>
-     <h1>Forgot Password?</h1>
+     <h1 className='text-black'>Forgot Password?</h1>
      <form onSubmit={!successfulCreation ? create : reset}>
        {!successfulCreation && (
          <>
-           <label htmlFor='email'>Please provide your email address</label>
+           <label className='text-black' htmlFor='email'>Please provide your email address</label>
            <input
              type='email'
              placeholder='e.g john@doe.com'
              value={email}
              onChange={e => setEmail(e.target.value)}
            />
-           <button>Send password reset code</button>
+           <button className='text-black'>Send password reset code</button>
            {error && <p>{error}</p>}
          </>
        )}
        {successfulCreation && (
          <>
-           <label htmlFor='password'>Enter your new password</label>
+           <label className='text-black' htmlFor='password'>Enter your new password</label>
            <input
              type='password'
              value={password}
              onChange={e => setPassword(e.target.value)}
            />
-           <label htmlFor='password'>Enter the password reset code that was sent to your email</label>
+           <label className='text-black' htmlFor='password'>Enter the password reset code that was sent to your email</label>
            <input
              type='text'
              value={code}
              onChange={e => setCode(e.target.value)}
            />
-           <button>Reset</button>
+           <button className='text-black'>Reset</button>
            {error && <p>{error}</p>}
          </>
        )}

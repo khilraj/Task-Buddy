@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import { ClerkProvider, auth } from "@clerk/nextjs";
+import {SpeedInsights} from '@vercel/speed-insights/next';
 
 import "./globals.css";
 import Sidebar from "./Components/Sidebar/Sidebar";
@@ -51,6 +52,7 @@ export default function RootLayout({
               {/* {userId && <ConditionalSidebar />} */}
               <RoleBasedRedirect/>
               <div className="w-full">{children}</div>
+              <SpeedInsights/>
             </GlobalStyleProvider>
           </ContextProvider>
         </body>
