@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["next", "next/types", "next-iron-session"],
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,

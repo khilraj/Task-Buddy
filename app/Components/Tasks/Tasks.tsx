@@ -36,6 +36,7 @@ function Tasks({ title, tasks }: Props) {
     openModal("create");
   };
 
+  // Input sanitization
   const sanitize = (input: string) => DOMPurify.sanitize(input);
   
   return (
