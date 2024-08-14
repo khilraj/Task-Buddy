@@ -1,6 +1,8 @@
 import prisma from "@/app/utils/connect";
-import { auth } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
+import { addUserLog } from "@/lib/actions/userLog.action";
+import logger from "@/lib/logger";
 
 // const ALGORITHM = "aes-256-cbc";
 // const SECRET_KEY = '1159449f1f21ee7b79b4afd0187918f178dd4f3b5a4d90604dc01a3579f6b25a'; 
@@ -38,23 +40,26 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized", status: 401 });
     }
 
+    // added
+    const user = await clerkClient.users.getUser(userId);
+    const email = user?.emailAddresses[0]?.emailAddress;
+
     const tasks = await prisma.task.findMany({
       where: {
         userId,
       },
     });
 
-    //  // Decrypt the title and description for each task
-    //  const decryptedTasks = tasks.map(task => ({
-    //   ...task,
-    //   title: decrypt(task.title),
-    //   description: decrypt(task.description!),
-    // }));
+    // Log the GET action
+    await addUserLog(userId, "Get Tasks", `User ${userId} retrieved tasks.`, [
+      { email:`${email}`, api: "/api/tasks", method: "GET" }
+    ])
 
     return NextResponse.json(tasks);
     // return tasks;
   } catch (error) {
-    console.log("ERROR GETTING TASKS: ", error);
+    // console.log("ERROR GETTING TASKS: ", error);
+    logger.error("ERROR GETTING TASKS: ", error);
     return NextResponse.json({ error: "Error updating task", status: 500 });
   }
 }
@@ -66,6 +71,9 @@ export async function POST(req: Request) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized", status: 401 });
     }
+
+    const user = await clerkClient.users.getUser(userId);
+    const email = user?.emailAddresses[0]?.emailAddress;
 
     const { title, description, date, completed, important } = await req.json();
 
@@ -97,9 +105,15 @@ export async function POST(req: Request) {
       },
     });
 
+     // Log the POST action
+     await addUserLog(userId, "Create Task", `Task ${task.id} created by user ${userId}.`, [
+      { email: `${email}`, api: "/api/tasks", method: "POST" },
+    ]);
+    logger.info(`Task created for user ${userId}: ${task.id}`)
+
     return NextResponse.json(task);
   } catch (error) {
-    console.log("ERROR CREATING TASK: ", error);
+    logger.error("ERROR CREATING TASK: ", error);
     return NextResponse.json({ error: "Error creating task", status: 500 });
   }
 }
@@ -113,6 +127,9 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Unauthorized", status: 401 });
     }
 
+    const user = await clerkClient.users.getUser(userId);
+    const email = user?.emailAddresses[0]?.emailAddress;
+
     const task = await prisma.task.update({
       where: {
         id,
@@ -122,9 +139,16 @@ export async function PUT(req: Request) {
       },
     });
 
+    // Log the PUT action
+    await addUserLog(userId, "Update Task", `Task ${id} updated by user ${userId}.`, [
+      { email: `${email}`, api: "/api/tasks", method: "PUT" },
+    ]);
+
+    logger.info(`Task updated for user ${userId}: ${id}`);
+
     return NextResponse.json(task);
   } catch (error) {
-    console.log("ERROR UPDATING TASK: ", error);
+    logger.error("ERROR UPDATING TASK: ", error);
     return NextResponse.json({ error: "Error deleting task", status: 500 });
   }
 }
