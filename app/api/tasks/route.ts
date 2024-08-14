@@ -2,9 +2,31 @@ import prisma from "@/app/utils/connect";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+
+const ALGORITHM = "aes-256-cbc";
+const SECRET_KEY = "4525ad78000b3a6c3b378cbfa9d41e9469cab04da79eec1c9543ecbacd05670d"; 
+const IV = crypto.randomBytes(16); // Initialization vector
 
 
-const SALT_ROUNDS=10;
+// Function to encrypt text
+function encrypt(text: string) {
+  const cipher = crypto.createCipheriv(ALGORITHM, Buffer.from(SECRET_KEY), IV);
+  let encrypted = cipher.update(text);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+  return IV.toString("hex") + ":" + encrypted.toString("hex");
+}
+
+// Function to decrypt text
+function decrypt(text: string) {
+  const textParts = text.split(":");
+  const iv = Buffer.from(textParts.shift()!, "hex");
+  const encryptedText = Buffer.from(textParts.join(":"), "hex");
+  const decipher = crypto.createDecipheriv(ALGORITHM, Buffer.from(SECRET_KEY), iv);
+  let decrypted = decipher.update(encryptedText);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
+  return decrypted.toString();
+}
 
 export async function GET(req: Request) {
   try {
@@ -20,7 +42,14 @@ export async function GET(req: Request) {
       },
     });
 
-    return NextResponse.json(tasks);
+     // Decrypt the title and description for each task
+     const decryptedTasks = tasks.map(task => ({
+      ...task,
+      title: decrypt(task.title),
+      description: decrypt(task.description!),
+    }));
+
+    return NextResponse.json(decryptedTasks);
     // return tasks;
   } catch (error) {
     console.log("ERROR GETTING TASKS: ", error);
@@ -51,14 +80,14 @@ export async function POST(req: Request) {
       });
     }
 
-     // Hash the title and description before saving
-     const hashedTitle = await bcrypt.hash(title, SALT_ROUNDS);
-     const hashedDescription = await bcrypt.hash(description, SALT_ROUNDS);
+    // Encrypt the title and description before saving
+    const encryptedTitle = encrypt(title);
+    const encryptedDescription = encrypt(description);
 
     const task = await prisma.task.create({
       data: {
-        title: hashedTitle,
-        description: hashedDescription,
+        title: encryptedTitle,
+        description: encryptedDescription,
         date,
         isCompleted: completed,
         isImportant: important,
