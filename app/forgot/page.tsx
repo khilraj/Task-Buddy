@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useAuth, useSignIn } from '@clerk/nextjs';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/navigation';
+import "../../styles/forgot.css"
 
 const ForgotPasswordPage: NextPage = () => {
  const [email, setEmail] = useState('');
@@ -67,10 +68,11 @@ const ForgotPasswordPage: NextPage = () => {
 
  return (
    <div>
-     <h1 className='text-black'>Forgot Password?</h1>
      <form onSubmit={!successfulCreation ? create : reset}>
        {!successfulCreation && (
          <>
+          <h1>Forgot Password?</h1>
+
            <label className='text-black' htmlFor='email'>Please provide your email address</label>
            <input
              type='email'

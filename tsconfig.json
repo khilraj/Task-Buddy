@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/admin/dashboard.js", "app/api/users/route.js", "app/api/tasks/route.ts", "app/api/users/users.js", "app/app.js", "app/forgot/ForgotPass_page.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/admin/dashboard.js", "app/api/users/route.js", "app/api/tasks/route.ts", "app/api/users/users.js", "server.js", "app/forgot/ForgotPass_page.tsx"],
   "exclude": ["node_modules"]
 }

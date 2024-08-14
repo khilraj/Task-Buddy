@@ -1,6 +1,10 @@
 import prisma from "@/app/utils/connect";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
+import bcrypt from 'bcrypt';
+
+
+const SALT_ROUNDS=10;
 
 export async function GET(req: Request) {
   try {
@@ -47,10 +51,14 @@ export async function POST(req: Request) {
       });
     }
 
+     // Hash the title and description before saving
+     const hashedTitle = await bcrypt.hash(title, SALT_ROUNDS);
+     const hashedDescription = await bcrypt.hash(description, SALT_ROUNDS);
+
     const task = await prisma.task.create({
       data: {
-        title,
-        description,
+        title: hashedTitle,
+        description: hashedDescription,
         date,
         isCompleted: completed,
         isImportant: important,

@@ -17,10 +17,11 @@ function Sidebar() {
 
   const { user } = useUser();
 
-  const { firstName, lastName, imageUrl } = user || {
+  const {username, firstName, lastName, imageUrl } = user || {
     firstName: "",
     lastName: "",
     imageUrl: "",
+    username: ""
   };
 
   const router = useRouter();
@@ -44,7 +45,8 @@ function Sidebar() {
           <UserButton />
         </div>
         <h1 className="capitalize">
-          {firstName} {lastName}
+          {/* {firstName} {lastName} */}
+          {username}
         </h1>
       </div>
       <ul className="nav-items">
@@ -183,7 +185,7 @@ const SidebarStyled = styled.nav<{ collapsed: boolean }>`
     }
 
     h1 {
-      font-size: 1.2rem;
+      font-size: 0.5rem;
       display: flex;
       flex-direction: column;
 
