@@ -1,32 +1,34 @@
 import prisma from "@/app/utils/connect";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
 
-const ALGORITHM = "aes-256-cbc";
-const SECRET_KEY = "4525ad78000b3a6c3b378cbfa9d41e9469cab04da79eec1c9543ecbacd05670d"; 
-const IV = crypto.randomBytes(16); // Initialization vector
+// const ALGORITHM = "aes-256-cbc";
+// const SECRET_KEY = '1159449f1f21ee7b79b4afd0187918f178dd4f3b5a4d90604dc01a3579f6b25a'; 
+// const IV = crypto.randomBytes(16); // Initialization vector
+
+// if (!SECRET_KEY || SECRET_KEY.length !== 32) {
+//   throw new Error("SECRET_KEY must be 32 bytes long");
+// }
 
 
-// Function to encrypt text
-function encrypt(text: string) {
-  const cipher = crypto.createCipheriv(ALGORITHM, Buffer.from(SECRET_KEY), IV);
-  let encrypted = cipher.update(text);
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return IV.toString("hex") + ":" + encrypted.toString("hex");
-}
+// // Function to encrypt text
+// function encrypt(text: string) {
+//   const cipher = crypto.createCipheriv(ALGORITHM, Buffer.from(SECRET_KEY), IV);
+//   let encrypted = cipher.update(text);
+//   encrypted = Buffer.concat([encrypted, cipher.final()]);
+//   return IV.toString("hex") + ":" + encrypted.toString("hex");
+// }
 
-// Function to decrypt text
-function decrypt(text: string) {
-  const textParts = text.split(":");
-  const iv = Buffer.from(textParts.shift()!, "hex");
-  const encryptedText = Buffer.from(textParts.join(":"), "hex");
-  const decipher = crypto.createDecipheriv(ALGORITHM, Buffer.from(SECRET_KEY), iv);
-  let decrypted = decipher.update(encryptedText);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-  return decrypted.toString();
-}
+// // Function to decrypt text
+// function decrypt(text: string) {
+//   const textParts = text.split(":");
+//   const iv = Buffer.from(textParts.shift()!, "hex");
+//   const encryptedText = Buffer.from(textParts.join(":"), "hex");
+//   const decipher = crypto.createDecipheriv(ALGORITHM, Buffer.from(SECRET_KEY), iv);
+//   let decrypted = decipher.update(encryptedText);
+//   decrypted = Buffer.concat([decrypted, decipher.final()]);
+//   return decrypted.toString();
+// }
 
 export async function GET(req: Request) {
   try {
@@ -42,14 +44,14 @@ export async function GET(req: Request) {
       },
     });
 
-     // Decrypt the title and description for each task
-     const decryptedTasks = tasks.map(task => ({
-      ...task,
-      title: decrypt(task.title),
-      description: decrypt(task.description!),
-    }));
+    //  // Decrypt the title and description for each task
+    //  const decryptedTasks = tasks.map(task => ({
+    //   ...task,
+    //   title: decrypt(task.title),
+    //   description: decrypt(task.description!),
+    // }));
 
-    return NextResponse.json(decryptedTasks);
+    return NextResponse.json(tasks);
     // return tasks;
   } catch (error) {
     console.log("ERROR GETTING TASKS: ", error);
@@ -81,13 +83,13 @@ export async function POST(req: Request) {
     }
 
     // Encrypt the title and description before saving
-    const encryptedTitle = encrypt(title);
-    const encryptedDescription = encrypt(description);
+    // const encryptedTitle = encrypt(title);
+    // const encryptedDescription = encrypt(description);
 
     const task = await prisma.task.create({
       data: {
-        title: encryptedTitle,
-        description: encryptedDescription,
+        title,
+        description,
         date,
         isCompleted: completed,
         isImportant: important,
