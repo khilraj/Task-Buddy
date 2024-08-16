@@ -20,12 +20,7 @@ interface Task {
   isImportant: boolean;
 }
 
-interface UserLog {
-  timestamp: string;
-  email: string;
-  api: string;
-  method: string;
-}
+
 
 export default function AdminDashboardUI({ users: initialUsers, currentUser }: AdminDashboardUIProps) {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -33,7 +28,6 @@ export default function AdminDashboardUI({ users: initialUsers, currentUser }: A
   const [loading, setLoading] = useState<boolean>(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>(initialUsers);
-  const [userLogs, setUserLogs] = useState<UserLog[]>([]);
 
 
   const { firstName, lastName, imageUrl } = currentUser || {
