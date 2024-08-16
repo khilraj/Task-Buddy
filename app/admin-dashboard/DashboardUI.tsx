@@ -4,7 +4,7 @@ import { User } from "@clerk/nextjs/server";
 import "../../styles/admin.css";
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
-import EditUserModal from "./EditUserModal"; // Ensure this path is correct
+import EditUserModal from "./EditUserModal"; 
 
 interface AdminDashboardUIProps {
   users: User[];
@@ -20,18 +20,44 @@ interface Task {
   isImportant: boolean;
 }
 
+interface UserLog {
+  timestamp: string;
+  email: string;
+  api: string;
+  method: string;
+}
+
 export default function AdminDashboardUI({ users: initialUsers, currentUser }: AdminDashboardUIProps) {
-  const [taskCount, setTaskCount] = useState<number>(0);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>(initialUsers);
+  const [userLogs, setUserLogs] = useState<UserLog[]>([]);
+
 
   const { firstName, lastName, imageUrl } = currentUser || {
     firstName: "",
     lastName: "",
     imageUrl: "",
+  };
+
+
+  useEffect(() => {
+    fetchUserLogs();
+  }, []);
+
+  const fetchUserLogs = async () => {
+    try {
+      const response = await fetch("/api/userlogs");
+      if (!response.ok) {
+        throw new Error("Failed to fetch user logs");
+      }
+      const data = await response.json();
+      setUserLogs(data);
+    } catch (error) {
+      console.error("Error fetching user logs: ", error);
+    }
   };
 
   const handleSeeTaskClick = async (user: User) => {
@@ -48,7 +74,7 @@ export default function AdminDashboardUI({ users: initialUsers, currentUser }: A
   };
 
   const fetchTasksForUser = async (userId: string): Promise<Task[]> => {
-    const response = await fetch(`/api/tasks/users?userId=${userId}`);
+    const response = await fetch(`/api/tasks/admin?userId=${userId}`);
     if (!response.ok) {
       throw new Error("Failed to fetch tasks");
     }
@@ -99,16 +125,40 @@ export default function AdminDashboardUI({ users: initialUsers, currentUser }: A
         </div>
       </header>
 
-      <div className="dashboard-image-container">
+      {/* <div className="dashboard-image-container">
         <img src="/path-to-your-image.png" alt="Admin Dashboard" className="dashboard-image" />
-      </div>
+      </div> */}
 
-      {/* <section className="dashboard-stats">
-        <div className="stat">
-          <h3>Total Tasks</h3>
-          <p>{taskCount}</p>
+     {/* User Logs Section */}
+     <section className="user-logs">
+        <div className="user-logs-header">
+          <h2 className="text-black">User Logs</h2>
         </div>
-      </section> */}
+
+        <div className="user-logs-body">
+          <table className="logs-table text-black">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Email</th>
+                <th>API</th>
+                <th>Method</th>
+              </tr>
+            </thead>
+            <tbody className="text-black">
+              {userLogs.map((log, index) => (
+                <tr key={index}>
+                  {/* <td>{new Date(log.timestamp).toLocaleString()}</td> */}
+                  <td>{log.email}</td>
+                  <td>{log.api}</td>
+                  <td>{log.method}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
 
       <section className="user-management">
         <div className="user-management-header">
