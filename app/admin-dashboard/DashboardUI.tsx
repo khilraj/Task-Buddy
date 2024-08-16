@@ -43,22 +43,22 @@ export default function AdminDashboardUI({ users: initialUsers, currentUser }: A
   };
 
 
-  useEffect(() => {
-    fetchUserLogs();
-  }, []);
+  // useEffect(() => {
+  //   fetchUserLogs();
+  // }, []);
 
-  const fetchUserLogs = async () => {
-    try {
-      const response = await fetch("/api/userlogs");
-      if (!response.ok) {
-        throw new Error("Failed to fetch user logs");
-      }
-      const data = await response.json();
-      setUserLogs(data);
-    } catch (error) {
-      console.error("Error fetching user logs: ", error);
-    }
-  };
+  // const fetchUserLogs = async () => {
+  //   try {
+  //     const response = await fetch("/api/userlogs");
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch user logs");
+  //     }
+  //     const data = await response.json();
+  //     setUserLogs(data);
+  //   } catch (error) {
+  //     console.error("Error fetching user logs: ", error);
+  //   }
+  // };
 
   const handleSeeTaskClick = async (user: User) => {
     setSelectedUser(user);
@@ -129,35 +129,7 @@ export default function AdminDashboardUI({ users: initialUsers, currentUser }: A
         <img src="/path-to-your-image.png" alt="Admin Dashboard" className="dashboard-image" />
       </div> */}
 
-     {/* User Logs Section */}
-     <section className="user-logs">
-        <div className="user-logs-header">
-          <h2 className="text-black">User Logs</h2>
-        </div>
 
-        <div className="user-logs-body">
-          <table className="logs-table text-black">
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Email</th>
-                <th>API</th>
-                <th>Method</th>
-              </tr>
-            </thead>
-            <tbody className="text-black">
-              {userLogs.map((log, index) => (
-                <tr key={index}>
-                  {/* <td>{new Date(log.timestamp).toLocaleString()}</td> */}
-                  <td>{log.email}</td>
-                  <td>{log.api}</td>
-                  <td>{log.method}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
 
 
       <section className="user-management">
