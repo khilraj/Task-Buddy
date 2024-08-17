@@ -18,7 +18,6 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose, onSave }) 
       ...user, 
       firstName, 
       lastName, 
-      // emailAddresses: [{ emailAddress: email, id: user.primaryEmailAddressId }] 
     };
     onSave(updatedUser);
   };
