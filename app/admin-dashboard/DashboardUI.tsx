@@ -37,13 +37,6 @@ export default function AdminDashboardUI({ users: initialUsers, currentUser }: A
   };
 
 
- 
-  //     const data = await response.json();
-  //     setUserLogs(data);
-  //   } catch (error) {
-  //     console.error("Error fetching user logs: ", error);
-  //   }
-  // };
 
   const handleSeeTaskClick = async (user: User) => {
     setSelectedUser(user);
