@@ -37,16 +37,7 @@ export default function AdminDashboardUI({ users: initialUsers, currentUser }: A
   };
 
 
-  // useEffect(() => {
-  //   fetchUserLogs();
-  // }, []);
-
-  // const fetchUserLogs = async () => {
-  //   try {
-  //     const response = await fetch("/api/userlogs");
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch user logs");
-  //     }
+ 
   //     const data = await response.json();
   //     setUserLogs(data);
   //   } catch (error) {
